@@ -32,6 +32,7 @@
     - [Les variables dans les fonctions](#les-variables-dans-les-fonctions)
     - [Passage de paramètres aux fonctions](#passage-de-paramètres-aux-fonctions)
     - [Déclaration dans un fichier indépendant](#déclaration-dans-un-fichier-indépendant)
+    - [Exemple](#exemple)
 ## Le She bang
 
 A chaque début de script shell, il est nécessaire d'ajouter le shebang `#!` suivi du shell choisi.
@@ -856,4 +857,30 @@ read -p "Saisissez votre prénom et votre nom (ex Marc Dubois) : " prenom
 nom
 # on appelle la fonction accueil du fichier ~/mesfonctions
 func_accueil "$prenom" "$nom"
+```
+### Exemple
+```sh
+func_existe_user() {
+      grep -qi "^$1:" /etc/passwd && return 0     
+      return 1
+}
+ 
+#func_home_user() extrait le home directory d'un utilisateur
+func_home_user() {
+    grep "^$1:" /etc/passwd | cut -d: -f6
+}
+ 
+# programme principal
+if [[ $# -eq 0 ]]; then
+      echo -e " Syntaxe: $0 <Entrez votre nom>" 
+      exit 1
+if func_existe_user $1
+then
+        home=$(func_home_user)
+    echo " $1 existe et son home directory est $home"
+    exit 10
+else
+    echo "$1 n'existe pas"
+    exit 20
+fi
 ```
